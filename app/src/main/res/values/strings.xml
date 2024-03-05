@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">GL_ES_NDK_Practice</string>
+    <string name="degrees_txt">Angle: %.0f degrees</string>
+</resources>
