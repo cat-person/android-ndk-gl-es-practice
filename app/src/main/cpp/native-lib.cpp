@@ -6,7 +6,10 @@
 ShapeRenderer *renderer;
 
 extern "C"
-JNIEXPORT void JNICALL Java_cafe_serenity_gl_1es_1ndk_1practice_GLES3JNILib_init(JNIEnv* env, jobject obj, jstring givenVShaderCode, jstring givenFShaderCode) {
+JNIEXPORT void JNICALL
+Java_cafe_serenity_gl_1es_1ndk_1practice_GLES3JNILib_init(JNIEnv *env, jobject obj,
+                                                          jstring givenVShaderCode,
+                                                          jstring givenFShaderCode) {
     const char *vShaderCode = env->GetStringUTFChars(givenVShaderCode, 0);
     const char *fShaderCode = env->GetStringUTFChars(givenFShaderCode, 0);
 
@@ -17,24 +20,29 @@ JNIEXPORT void JNICALL Java_cafe_serenity_gl_1es_1ndk_1practice_GLES3JNILib_init
 }
 
 extern "C"
-JNIEXPORT void JNICALL Java_cafe_serenity_gl_1es_1ndk_1practice_GLES3JNILib_resize( JNIEnv* env, jobject obj, jint width, jint height) {
+JNIEXPORT void JNICALL
+Java_cafe_serenity_gl_1es_1ndk_1practice_GLES3JNILib_resize(JNIEnv *env, jobject obj, jint width,
+                                                            jint height) {
     renderer->updateViewPort(width, height);
 }
 
 extern "C"
 JNIEXPORT void JNICALL Java_cafe_serenity_gl_1es_1ndk_1practice_GLES3JNILib_updateModel(
-        JNIEnv* env,
+        JNIEnv *env,
         jobject obj,
         jfloatArray points,
         jfloat rotationDegrees,
         jint color) {
 
-    GLfloat* coordinates = env->GetFloatArrayElements(points, 0);
+    GLfloat *coordinates = env->GetFloatArrayElements(points, 0);
     renderer->updateShapeParams(coordinates, rotationDegrees, color);
 }
 
 extern "C"
-JNIEXPORT void JNICALL Java_cafe_serenity_gl_1es_1ndk_1practice_GLES3JNILib_draw(JNIEnv* env, jobject obj, jstring vShaderCode, jstring fShaderCode) {
+JNIEXPORT void JNICALL
+Java_cafe_serenity_gl_1es_1ndk_1practice_GLES3JNILib_draw(JNIEnv *env, jobject obj,
+                                                          jstring vShaderCode,
+                                                          jstring fShaderCode) {
     renderer->render();
 }
 

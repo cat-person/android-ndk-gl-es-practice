@@ -10,16 +10,21 @@
 #define LOG_TAG "GLES3JNI"
 
 class ShapeRenderer {
-    public:
+public:
     ShapeRenderer(const char *vShaderCode, const char *fShaderCode);
-        virtual ~ShapeRenderer();
-        void updateShapeParams(GLfloat* vertexCoordinates, GLfloat angleDegrees, GLint color);
-        void updateViewPort(GLuint width, GLuint height);
-        void render();
+
+    virtual ~ShapeRenderer();
+
+    void updateShapeParams(GLfloat *vertexCoordinates, GLfloat angleDegrees, GLint color);
+
+    void updateViewPort(GLuint width, GLuint height);
+
+    void render();
 
 private:
     GLuint createProgram(const char *vShaderCode, const char *fShaderCode);
-    GLuint createShader(GLenum shaderType, const char* src);
+
+    GLuint createShader(GLenum shaderType, const char *src);
 
     GLuint program;
 
@@ -29,7 +34,7 @@ private:
     GLint colorUniformLocation;
     GLint rotationMatrixUniformLocation;
 
-    GLfloat* vertexCoordinates;
+    GLfloat *vertexCoordinates;
     GLfloat angleDegrees;
     GLint color;
 
@@ -61,23 +66,25 @@ ShapeRenderer::~ShapeRenderer() {
 //    glDeleteProgram(mProgram);
 }
 
-void ShapeRenderer::updateShapeParams(GLfloat* vertexCoordinates, GLfloat angleDegrees, GLint color) {
+void
+ShapeRenderer::updateShapeParams(GLfloat *vertexCoordinates, GLfloat angleDegrees, GLint color) {
     this->vertexCoordinates = vertexCoordinates;
     this->angleDegrees = angleDegrees;
     this->color = color;
-    __android_log_print(ANDROID_LOG_ERROR, LOG_TAG, "updateShapeParams :: Vertex coordinates %s", vertexCoordinates);
+    __android_log_print(ANDROID_LOG_ERROR, LOG_TAG, "updateShapeParams :: Vertex coordinates %s",
+                        vertexCoordinates);
 
     float angleRadians = (angleDegrees * M_PI) / 180.0;
 
-    gpuRotationMatrix = new GLfloat [] {
+    gpuRotationMatrix = new GLfloat[]{
             scaleX * cos(angleRadians), scaleY * -sin(angleRadians),
             scaleX * sin(angleRadians), scaleY * cos(angleRadians)
     };
-    gpuColor = new GLfloat [] {1.0,0.0, 0.0, 1.0};
+    gpuColor = new GLfloat[]{1.0, 0.0, 0.0, 1.0};
 }
 
 void ShapeRenderer::updateViewPort(GLuint width, GLuint height) {
-    if(height < width) {
+    if (height < width) {
         this->scaleX = static_cast<float>(height) / static_cast<float>(width);
         this->scaleY = 1.0;
     } else {
@@ -92,7 +99,8 @@ void ShapeRenderer::render() {
 
     glEnableVertexAttribArray(coordinatesAttributeLocation);
 
-    glVertexAttribPointer(coordinatesAttributeLocation, 2, GL_FLOAT, GL_FALSE, 8,vertexCoordinates);
+    glVertexAttribPointer(coordinatesAttributeLocation, 2, GL_FLOAT, GL_FALSE, 8,
+                          vertexCoordinates);
 
     glUniform4fv(colorUniformLocation, 1, gpuColor);
     glUniformMatrix2fv(rotationMatrixUniformLocation, 1, false, gpuRotationMatrix);
@@ -104,16 +112,17 @@ void ShapeRenderer::render() {
     glDisableVertexAttribArray(coordinatesAttributeLocation);
 }
 
-bool checkGlError(const char* funcName) {
+bool checkGlError(const char *funcName) {
     GLint err = glGetError();
     if (err != GL_NO_ERROR) {
-        __android_log_print(ANDROID_LOG_ERROR, LOG_TAG, "GL error after %s(): 0x%08x\n", funcName, err);
+        __android_log_print(ANDROID_LOG_ERROR, LOG_TAG, "GL error after %s(): 0x%08x\n", funcName,
+                            err);
         return true;
     }
     return false;
 }
 
-GLuint ShapeRenderer::createShader(GLenum shaderType, const char* src) {
+GLuint ShapeRenderer::createShader(GLenum shaderType, const char *src) {
     GLuint shader = glCreateShader(shaderType);
     if (!shader) {
         checkGlError("glCreateShader");
@@ -128,11 +137,13 @@ GLuint ShapeRenderer::createShader(GLenum shaderType, const char* src) {
         GLint infoLogLen = 0;
         glGetShaderiv(shader, GL_INFO_LOG_LENGTH, &infoLogLen);
         if (infoLogLen > 0) {
-            GLchar* infoLog = (GLchar*)malloc(infoLogLen);
+            GLchar *infoLog = (GLchar *) malloc(infoLogLen);
             if (infoLog) {
                 glGetShaderInfoLog(shader, infoLogLen, NULL, infoLog);
-                __android_log_print(ANDROID_LOG_ERROR, LOG_TAG, "Could not compile %s shader:\n%s\n",
-                      shaderType == GL_VERTEX_SHADER ? "vertex" : "fragment", infoLog);
+                __android_log_print(ANDROID_LOG_ERROR, LOG_TAG,
+                                    "Could not compile %s shader:\n%s\n",
+                                    shaderType == GL_VERTEX_SHADER ? "vertex" : "fragment",
+                                    infoLog);
                 free(infoLog);
             }
         }
@@ -143,7 +154,7 @@ GLuint ShapeRenderer::createShader(GLenum shaderType, const char* src) {
     return shader;
 }
 
-GLuint ShapeRenderer::createProgram(const char* vtxSrc, const char* fragSrc) {
+GLuint ShapeRenderer::createProgram(const char *vtxSrc, const char *fragSrc) {
     GLuint vtxShader = 0;
     GLuint fragShader = 0;
     GLuint program = 0;
@@ -171,10 +182,11 @@ GLuint ShapeRenderer::createProgram(const char* vtxSrc, const char* fragSrc) {
         GLint infoLogLen = 0;
         glGetProgramiv(program, GL_INFO_LOG_LENGTH, &infoLogLen);
         if (infoLogLen) {
-            GLchar* infoLog = (GLchar*)malloc(infoLogLen);
+            GLchar *infoLog = (GLchar *) malloc(infoLogLen);
             if (infoLog) {
                 glGetProgramInfoLog(program, infoLogLen, NULL, infoLog);
-                __android_log_print(ANDROID_LOG_ERROR, LOG_TAG, "Could not link program:\n%s\n", infoLog);
+                __android_log_print(ANDROID_LOG_ERROR, LOG_TAG, "Could not link program:\n%s\n",
+                                    infoLog);
                 free(infoLog);
             }
         }

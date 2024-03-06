@@ -9,17 +9,20 @@ import kotlin.math.PI
 import kotlin.math.cos
 import kotlin.math.sin
 
-class NDKRenderer(val descriptor: ShaderDescriptor): GLSurfaceView.Renderer {
+class NDKRenderer(val descriptor: ShaderDescriptor) : GLSurfaceView.Renderer {
     override fun onSurfaceCreated(gl: GL10?, config: EGLConfig?) {
         GLES3JNILib.init(descriptor.vShaderCode, descriptor.fShaderCode)
         updateShape(descriptor)
     }
 
     fun updateShape(descriptor: ShaderDescriptor) {
-        GLES3JNILib.updateModel(floatArrayOf(
-            -.5f, -.5f,
-            .0f, .7f,
-            .5f, -.5f), descriptor.radians, Color.DKGRAY)
+        GLES3JNILib.updateModel(
+            floatArrayOf(
+                -.5f, -.5f,
+                .0f, .7f,
+                .5f, -.5f
+            ), descriptor.radians, Color.DKGRAY
+        )
     }
 
     override fun onSurfaceChanged(gl: GL10?, width: Int, height: Int) {
@@ -35,12 +38,14 @@ class MonochromaticTriangleGLDescriptor(
     override val vShaderCode: String,
     override val fShaderCode: String,
     coords: FloatArray,
-    val color: Color): ShaderDescriptor{
+    val color: Color
+) : ShaderDescriptor {
     override val attributes = arrayOf(Attribute.Coordinates2D(coords) as Attribute)
-    override val uniforms get() = arrayOf(
-        Uniform.RotationMatrixUniform(transformationMatrix) as Uniform,
-        Uniform.ColorUniform(color) as Uniform,
-    )
+    override val uniforms
+        get() = arrayOf(
+            Uniform.RotationMatrixUniform(transformationMatrix) as Uniform,
+            Uniform.ColorUniform(color) as Uniform,
+        )
 
     override val radians: Float
         get() = _radians
@@ -77,7 +82,7 @@ interface ShaderDescriptor {
 
 sealed class Attribute(val attributeName: String, val stride: Int, val size: Int) {
     abstract fun toByteArray(): ByteArray
-    class Coordinates2D(val points: FloatArray): Attribute("position",8, 24){
+    class Coordinates2D(val points: FloatArray) : Attribute("position", 8, 24) {
         override fun toByteArray(): ByteArray {
             TODO("Not yet implemented")
         }
@@ -86,12 +91,13 @@ sealed class Attribute(val attributeName: String, val stride: Int, val size: Int
 
 sealed class Uniform(val uniformName: String) {
     abstract fun toByteArray(): ByteArray
-    class ColorUniform(val color: Color) : Uniform("color"){
+    class ColorUniform(val color: Color) : Uniform("color") {
         override fun toByteArray(): ByteArray {
             TODO("Not yet implemented")
         }
     }
-    class RotationMatrixUniform(val rotationMatrixArray: FloatArray): Uniform("rotation"){
+
+    class RotationMatrixUniform(val rotationMatrixArray: FloatArray) : Uniform("rotation") {
         override fun toByteArray(): ByteArray {
             TODO("Not yet implemented")
         }

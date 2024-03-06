@@ -5,6 +5,7 @@ object GLES3JNILib {
     external fun resize(width: Int, height: Int)
     external fun updateModel(points: FloatArray, rotationDegrees: Float, color: Int)
     external fun draw(vShaderCode: String, fShaderCode: String)
+
     init {
         System.loadLibrary("gl_es_ndk_practice")
     }

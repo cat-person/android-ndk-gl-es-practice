@@ -38,16 +38,17 @@ class MainActivity : AppCompatActivity() {
 
         binding.angleTxt.text = getString(R.string.degrees_txt, binding.slider.value)
 
-        binding.slider.addOnChangeListener{ _, value, _ ->
+        binding.slider.addOnChangeListener { _, value, _ ->
 
             triangleDescriptor.setRotation(value)
             renderer.updateShape(triangleDescriptor)
             binding.angleTxt.text = getString(R.string.degrees_txt, value)
         }
     }
+
     private val shaderMap = mapOf<String, String>()
     private fun loadShader(assetName: String): String {
-        return if(shaderMap.containsKey(assetName)) {
+        return if (shaderMap.containsKey(assetName)) {
             shaderMap[assetName]!!
         } else {
             val stream = assets.open(assetName)
