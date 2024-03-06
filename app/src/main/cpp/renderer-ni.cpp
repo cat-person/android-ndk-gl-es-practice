@@ -43,7 +43,3 @@ JNIEXPORT void JNICALL
 Java_cafe_serenity_gl_1es_1ndk_1practice_RendererJNI_draw(JNIEnv *env, jobject obj) {
     renderer->render();
 }
-
-
-
-// create renderer
