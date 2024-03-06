@@ -10,21 +10,25 @@ import kotlin.math.cos
 import kotlin.math.sin
 
 class NDKRenderer(val descriptor: ShaderDescriptor): GLSurfaceView.Renderer {
-
-    val nativeLib = GLES3JNILib()
     override fun onSurfaceCreated(gl: GL10?, config: EGLConfig?) {
-        nativeLib.init()
+        GLES3JNILib.init(descriptor.vShaderCode, descriptor.fShaderCode)
+        updateShape(descriptor)
+    }
+
+    fun updateShape(descriptor: ShaderDescriptor) {
+        GLES3JNILib.updateModel(floatArrayOf(
+            -.5f, -.5f,
+            .0f, .7f,
+            .5f, -.5f), descriptor.radians, Color.DKGRAY)
     }
 
     override fun onSurfaceChanged(gl: GL10?, width: Int, height: Int) {
-        nativeLib.resize(width, height)
+        GLES3JNILib.resize(width, height)
     }
 
     override fun onDrawFrame(gl: GL10?) {
-        nativeLib.draw(descriptor.vShaderCode, descriptor.fShaderCode)
+        GLES3JNILib.draw(descriptor.vShaderCode, descriptor.fShaderCode)
     }
-
-
 }
 
 class MonochromaticTriangleGLDescriptor(
@@ -38,18 +42,23 @@ class MonochromaticTriangleGLDescriptor(
         Uniform.ColorUniform(color) as Uniform,
     )
 
+    override val radians: Float
+        get() = _radians
+
+    private var _radians = 0f
+
     private var transformationMatrix = floatArrayOf(
         1f, 0f,
         0f, 1f,
     ) // Identity matrix
 
     fun setRotation(degrees: Float) {
-        val radians = ( PI.toFloat() * degrees )/ 180f
+        _radians = degrees
 
-        transformationMatrix = floatArrayOf(
-            cos(radians), -sin(radians),
-            sin(radians), cos(radians),
-        )
+//        transformationMatrix = floatArrayOf(
+//            cos(radians), -sin(radians),
+//            sin(radians), cos(radians),
+//        )
     }
 
     companion object {
@@ -63,6 +72,7 @@ interface ShaderDescriptor {
     val fShaderCode: String
     val attributes: Array<Attribute>
     val uniforms: Array<Uniform>
+    val radians: Float
 }
 
 sealed class Attribute(val attributeName: String, val stride: Int, val size: Int) {
@@ -72,7 +82,6 @@ sealed class Attribute(val attributeName: String, val stride: Int, val size: Int
             TODO("Not yet implemented")
         }
     }
-
 }
 
 sealed class Uniform(val uniformName: String) {

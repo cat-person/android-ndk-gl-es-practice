@@ -1,9 +1,8 @@
 package cafe.serenity.gl_es_ndk_practice
 
 import android.graphics.Color
-import android.graphics.PointF
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.graphics.toColor
 import cafe.serenity.gl_es_ndk_practice.databinding.ActivityMainBinding
 
@@ -24,18 +23,25 @@ class MainActivity : AppCompatActivity() {
         )
     }
 
+    private val renderer by lazy {
+        NDKRenderer(triangleDescriptor)
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        binding.surfaceView.setRenderer(NDKRenderer(triangleDescriptor))
+        binding.surfaceView.setEGLContextClientVersion(2)
+        binding.surfaceView.setRenderer(renderer)
 
         binding.angleTxt.text = getString(R.string.degrees_txt, binding.slider.value)
 
         binding.slider.addOnChangeListener{ _, value, _ ->
+
             triangleDescriptor.setRotation(value)
+            renderer.updateShape(triangleDescriptor)
             binding.angleTxt.text = getString(R.string.degrees_txt, value)
         }
     }
@@ -44,7 +50,7 @@ class MainActivity : AppCompatActivity() {
         return if(shaderMap.containsKey(assetName)) {
             shaderMap[assetName]!!
         } else {
-            val stream = assets.open("triangle_vertex_shader.glsl")
+            val stream = assets.open(assetName)
             val size = stream.available()
             val buffer = ByteArray(size)
             stream.read(buffer)
