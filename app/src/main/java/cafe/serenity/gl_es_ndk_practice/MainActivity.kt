@@ -19,7 +19,7 @@ class MainActivity : AppCompatActivity() {
                 .0f, .7f,
                 .5f, -.5f,
             ),
-            Color.DKGRAY.toColor()
+            Color.DKGRAY
         )
     }
 
