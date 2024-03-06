@@ -48,7 +48,6 @@ private:
 ShapeRenderer::ShapeRenderer(const char *vShaderCode, const char *fShaderCode) {
     this->program = createProgram(vShaderCode, fShaderCode);
     this->coordinatesAttributeLocation = glGetAttribLocation(program, "vPosition");
-
     this->rotationMatrixUniformLocation = glGetUniformLocation(program, "rotationMatrix");
     this->colorUniformLocation = glGetUniformLocation(program, "color");
 }
@@ -60,10 +59,9 @@ ShapeRenderer::~ShapeRenderer() {
      * If the context exists, it must be current. This only happens when we're
      * cleaning up after a failed init().
      */
-    // Destructor will be implemented later
-//    if (eglGetCurrentContext() != mEglContext) return;
-//    glDeleteBuffers(1, &mVB);
-//    glDeleteProgram(mProgram);
+
+    glDeleteBuffers(1, reinterpret_cast<const GLuint *>(&coordinatesAttributeLocation));
+    glDeleteProgram(program);
 }
 
 void
@@ -122,7 +120,7 @@ bool checkGlError(const char *funcName) {
     return false;
 }
 
-GLuint ShapeRenderer::createShader(GLenum shaderType, const char *src) {
+GLuint ShapeRenderer::createShader(GLenum shaderType, const char *src) { // rename to compile shader
     GLuint shader = glCreateShader(shaderType);
     if (!shader) {
         checkGlError("glCreateShader");
@@ -157,7 +155,7 @@ GLuint ShapeRenderer::createShader(GLenum shaderType, const char *src) {
 GLuint ShapeRenderer::createProgram(const char *vtxSrc, const char *fragSrc) {
     GLuint vtxShader = 0;
     GLuint fragShader = 0;
-    GLuint program = 0;
+    GLuint resultProgram = 0;
     GLint linked = GL_FALSE;
 
     vtxShader = createShader(GL_VERTEX_SHADER, vtxSrc);
@@ -167,20 +165,20 @@ GLuint ShapeRenderer::createProgram(const char *vtxSrc, const char *fragSrc) {
     fragShader = createShader(GL_FRAGMENT_SHADER, fragSrc);
     if (!fragShader) goto exit;
 
-    program = glCreateProgram();
-    if (!program) {
+    resultProgram = glCreateProgram();
+    if (!resultProgram) {
         checkGlError("glCreateProgram");
         goto exit;
     }
-    glAttachShader(program, vtxShader);
-    glAttachShader(program, fragShader);
+    glAttachShader(resultProgram, vtxShader);
+    glAttachShader(resultProgram, fragShader);
 
-    glLinkProgram(program);
-    glGetProgramiv(program, GL_LINK_STATUS, &linked);
+    glLinkProgram(resultProgram);
+    glGetProgramiv(resultProgram, GL_LINK_STATUS, &linked);
     if (!linked) {
         __android_log_print(ANDROID_LOG_ERROR, LOG_TAG, "Could not link program");
         GLint infoLogLen = 0;
-        glGetProgramiv(program, GL_INFO_LOG_LENGTH, &infoLogLen);
+        glGetProgramiv(resultProgram, GL_INFO_LOG_LENGTH, &infoLogLen);
         if (infoLogLen) {
             GLchar *infoLog = (GLchar *) malloc(infoLogLen);
             if (infoLog) {
@@ -190,12 +188,12 @@ GLuint ShapeRenderer::createProgram(const char *vtxSrc, const char *fragSrc) {
                 free(infoLog);
             }
         }
-        glDeleteProgram(program);
-        program = 0;
+        glDeleteProgram(resultProgram);
+        resultProgram = 0;
     }
 
     exit:
     glDeleteShader(vtxShader);
     glDeleteShader(fragShader);
-    return program;
+    return resultProgram;
 }
