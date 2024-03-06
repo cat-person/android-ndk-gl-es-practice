@@ -1,7 +1,11 @@
+//
+// Created by Aleksei Klyshnniov on 05.03.2024.
+//
+
 #include <jni.h>
 #include <string>
 #include <GLES2/gl2.h>
-#include "renderer.cpp"
+#include "native-renderer.cpp"
 
 ShapeRenderer *renderer;
 
