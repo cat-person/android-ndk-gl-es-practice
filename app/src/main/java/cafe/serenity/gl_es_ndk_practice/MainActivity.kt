@@ -4,6 +4,8 @@ import android.graphics.Color
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import cafe.serenity.gl_es_ndk_practice.databinding.ActivityMainBinding
+import cafe.serenity.native_shape_renderer.MonochromaticTriangleGLDescriptor
+import cafe.serenity.native_shape_renderer.NDKRenderer
 
 class MainActivity : AppCompatActivity() {
 

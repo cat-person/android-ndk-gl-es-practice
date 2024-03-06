@@ -15,3 +15,4 @@ dependencyResolutionManagement {
 
 rootProject.name = "GL_ES_NDK_Practice"
 include(":app")
+include(":app:native-shape-renderer")

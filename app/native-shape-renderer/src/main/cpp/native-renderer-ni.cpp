@@ -11,7 +11,7 @@ ShapeRenderer *renderer;
 
 extern "C"
 JNIEXPORT void JNICALL
-Java_cafe_serenity_gl_1es_1ndk_1practice_RendererJNI_init(JNIEnv *env, jobject obj,
+Java_cafe_serenity_native_1shape_1renderer_RendererJNI_init(JNIEnv *env, jobject obj,
                                                           jstring givenVShaderCode,
                                                           jstring givenFShaderCode) {
     const char *vShaderCode = env->GetStringUTFChars(givenVShaderCode, 0);
@@ -25,13 +25,13 @@ Java_cafe_serenity_gl_1es_1ndk_1practice_RendererJNI_init(JNIEnv *env, jobject o
 
 extern "C"
 JNIEXPORT void JNICALL
-Java_cafe_serenity_gl_1es_1ndk_1practice_RendererJNI_resize(JNIEnv *env, jobject obj, jint width,
+Java_cafe_serenity_native_1shape_1renderer_RendererJNI_resize(JNIEnv *env, jobject obj, jint width,
                                                             jint height) {
     renderer->updateViewPort(width, height);
 }
 
 extern "C"
-JNIEXPORT void JNICALL Java_cafe_serenity_gl_1es_1ndk_1practice_RendererJNI_updateModel(
+JNIEXPORT void JNICALL Java_cafe_serenity_native_1shape_1renderer_RendererJNI_updateModel(
         JNIEnv *env,
         jobject obj,
         jfloatArray points,
@@ -44,6 +44,6 @@ JNIEXPORT void JNICALL Java_cafe_serenity_gl_1es_1ndk_1practice_RendererJNI_upda
 
 extern "C"
 JNIEXPORT void JNICALL
-Java_cafe_serenity_gl_1es_1ndk_1practice_RendererJNI_draw(JNIEnv *env, jobject obj) {
+Java_cafe_serenity_native_1shape_1renderer_RendererJNI_draw(JNIEnv *env, jobject obj) {
     renderer->render();
 }

@@ -1,4 +1,4 @@
-package cafe.serenity.gl_es_ndk_practice
+package cafe.serenity.native_shape_renderer
 import android.opengl.GLSurfaceView
 import javax.microedition.khronos.egl.EGLConfig
 import javax.microedition.khronos.opengles.GL10
@@ -52,7 +52,7 @@ object RendererJNI {
     external fun draw()
 
     init {
-        System.loadLibrary("gl_es_ndk_practice")
+        System.loadLibrary("native_shape_renderer")
     }
 }
 
