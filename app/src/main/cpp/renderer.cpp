@@ -15,7 +15,7 @@ public:
 
     virtual ~ShapeRenderer();
 
-    void updateShapeParams(GLfloat *vertexCoordinates, GLfloat angleDegrees, GLint color);
+    void updateShapeParams(GLfloat *vertexCoordinates, GLfloat angleDegrees, GLuint color);
 
     void updateViewPort(GLuint width, GLuint height);
 
@@ -65,7 +65,7 @@ ShapeRenderer::~ShapeRenderer() {
 }
 
 void
-ShapeRenderer::updateShapeParams(GLfloat *vertexCoordinates, GLfloat angleDegrees, GLint color) {
+ShapeRenderer::updateShapeParams(GLfloat *vertexCoordinates, GLfloat angleDegrees, GLuint color) {
     this->vertexCoordinates = vertexCoordinates;
     this->angleDegrees = angleDegrees;
     this->color = color;
@@ -78,7 +78,13 @@ ShapeRenderer::updateShapeParams(GLfloat *vertexCoordinates, GLfloat angleDegree
             scaleX * cos(angleRadians), scaleY * -sin(angleRadians),
             scaleX * sin(angleRadians), scaleY * cos(angleRadians)
     };
-    gpuColor = new GLfloat[]{1.0, 0.0, 0.0, 1.0};
+
+    float alpha = static_cast<float>((color >> 24) & 0xFF) / 255.0f;
+    float red = static_cast<float>((color >> 16) & 0xFF) / 255.0f;
+    float green = static_cast<float>((color >> 8) & 0xFF) / 255.0f;
+    float blue = static_cast<float>((color) & 0xFF) / 255.0f;
+
+    gpuColor = new GLfloat[]{red, green, blue, alpha};
 }
 
 void ShapeRenderer::updateViewPort(GLuint width, GLuint height) {

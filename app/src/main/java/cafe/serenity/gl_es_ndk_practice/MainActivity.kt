@@ -3,7 +3,6 @@ package cafe.serenity.gl_es_ndk_practice
 import android.graphics.Color
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.graphics.toColor
 import cafe.serenity.gl_es_ndk_practice.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
@@ -19,7 +18,7 @@ class MainActivity : AppCompatActivity() {
                 .0f, .7f,
                 .5f, -.5f,
             ),
-            Color.DKGRAY
+            Color.LTGRAY
         )
     }
 
