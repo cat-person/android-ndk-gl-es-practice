@@ -1,22 +1,18 @@
 package cafe.serenity.gl_es_ndk_practice
 
 import android.graphics.Color
-import android.graphics.PointF
 import android.opengl.GLSurfaceView
 import javax.microedition.khronos.egl.EGLConfig
 import javax.microedition.khronos.opengles.GL10
-import kotlin.math.PI
-import kotlin.math.cos
-import kotlin.math.sin
 
 class NDKRenderer(val descriptor: ShaderDescriptor) : GLSurfaceView.Renderer {
     override fun onSurfaceCreated(gl: GL10?, config: EGLConfig?) {
-        GLES3JNILib.init(descriptor.vShaderCode, descriptor.fShaderCode)
+        RendererJNI.init(descriptor.vShaderCode, descriptor.fShaderCode)
         updateShape(descriptor)
     }
 
     fun updateShape(descriptor: ShaderDescriptor) {
-        GLES3JNILib.updateModel(
+        RendererJNI.updateModel(
             floatArrayOf(
                 -.5f, -.5f,
                 .0f, .7f,
@@ -26,11 +22,11 @@ class NDKRenderer(val descriptor: ShaderDescriptor) : GLSurfaceView.Renderer {
     }
 
     override fun onSurfaceChanged(gl: GL10?, width: Int, height: Int) {
-        GLES3JNILib.resize(width, height)
+        RendererJNI.resize(width, height)
     }
 
     override fun onDrawFrame(gl: GL10?) {
-        GLES3JNILib.draw(descriptor.vShaderCode, descriptor.fShaderCode)
+        RendererJNI.draw()
     }
 }
 
