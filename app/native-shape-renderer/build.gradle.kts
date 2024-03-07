@@ -1,11 +1,17 @@
+import com.android.sdklib.computeReleaseNameAndDetails
+
 plugins {
     id("com.android.library")
     id("org.jetbrains.kotlin.android")
+    id("maven-publish")
 }
 
 android {
     namespace = "cafe.serenity.native_shape_renderer"
     compileSdk = 33
+
+    group = "cafe.serenity.native_shape_renderer"
+    version = "1.0"
 
     defaultConfig {
         minSdk = 27
@@ -44,11 +50,19 @@ android {
 }
 
 dependencies {
+    implementation("androidx.core:core-ktx:1.12.0")
+}
 
-    implementation("androidx.core:core-ktx:1.9.0")
-    implementation("androidx.appcompat:appcompat:1.6.1")
-    implementation("com.google.android.material:material:1.11.0")
-    testImplementation("junit:junit:4.13.2")
-    androidTestImplementation("androidx.test.ext:junit:1.1.5")
-    androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
+afterEvaluate {
+    publishing {
+        publications {
+            create<MavenPublication>("native-shape-renderer") {
+                groupId = "com.github.cat-person"
+                artifactId = "native_shape_renderer"
+                version = "1.0"
+
+                from(components["release"])
+            }
+        }
+    }
 }
