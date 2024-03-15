@@ -95,6 +95,8 @@ void ShapeRenderer::updateViewPort(GLuint width, GLuint height) {
 void ShapeRenderer::render() {
     glUseProgram(program);
 
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
     glEnableVertexAttribArray(coordinatesAttributeLocation);
 
     glVertexAttribPointer(coordinatesAttributeLocation, 2, GL_FLOAT, GL_FALSE, 8,
